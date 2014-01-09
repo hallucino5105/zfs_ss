@@ -59,6 +59,8 @@ def snapshot_feature_list(zt, devname, feature):
 
 
 def snapshot_manage_lifetime(zt, devname, border, prefix):
+    mout("snapshot management by lifetime")
+
     sslist = snapshot_feature_list(zt, devname, prefix)
 
     del_sslist = []
@@ -69,6 +71,9 @@ def snapshot_manage_lifetime(zt, devname, border, prefix):
 
     if len(del_sslist) > 0:
         for ds in del_sslist:
+            mout("snapshot garbage collect")
+            mout("  target: name='%s' date='%s'" % (ds["name"], ds["date"]))
+
             zt.target_snapshot_destroy(ds["name"])
         return 0
     else:
@@ -76,11 +81,16 @@ def snapshot_manage_lifetime(zt, devname, border, prefix):
 
 
 def snapshot_manage_generation(zt, devname, generation, feature):
+    mout("snapshot management by generation")
+
     sslist = snapshot_feature_list(zt, devname, feature)
 
     if len(sslist) > generation:
         del_sslist = sslist[generation:]
         for ds in del_sslist:
+            mout("snapshot garbage collect")
+            mout("  target: name='%s' date='%s'" % (ds["name"], ds["date"]))
+
             zt.target_snapshot_destroy(ds["name"])
         return 0
     else:
@@ -143,23 +153,23 @@ def parse_options():
     options, args = parser.parse_args()
 
     if not options.devname:
-        mout("error: require option \"devname\"")
+        mout("error: require option 'devname'")
         parser.print_help()
         return None
 
     if not options.label:
-        mout("error: require option \"label\"")
+        mout("error: require option 'label'")
         parser.print_help()
         return None
 
     # generation,lifetimeどちらかが有効な場合だけ許容
     if (not options.generation and not options.lifetime) or (options.generation and options.lifetime):
-        mout("error: require option \"generation\" or \"lifetime\"")
+        mout("error: require option 'generation' or 'lifetime'")
         parser.print_help()
         return None
 
     if options.generation and not options.generation > 0:
-        mout("error: options \"generation\" greater than 0")
+        mout("error: options 'generation' greater than 0")
         parser.print_help()
         return None
 
@@ -184,7 +194,7 @@ def parse_options():
         options.lifetime = int(options.lifetime)
 
     if options.lifetime and not options.lifetime > 0:
-        mout("error: options \"lifetime\" greater than 0")
+        mout("error: options 'lifetime' greater than 0")
         parser.print_help()
         return None
 

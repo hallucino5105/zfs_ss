@@ -3,6 +3,7 @@
 
 
 import sys
+import os
 import optparse
 import datetime
 from zfs_tools import ZfsTools
@@ -11,8 +12,16 @@ from zfs_tools import ZfsTools
 snapshot_root_identifier = "zfsss"
 
 
+def now2():
+    return datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S")
+
+
+def now():
+    return datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+
+
 def merr(message, newline=True, flush=False):
-    sys.stderr.write(message)
+    sys.stderr.write("[%s][%s] error: %s" % (now2(), os.uname()[1], message))
     if newline:
         sys.stderr.write("\n")
     if flush:
@@ -20,22 +29,18 @@ def merr(message, newline=True, flush=False):
 
 
 def mout(message, newline=True, flush=False):
-    sys.stdout.write(message)
+    sys.stdout.write("[%s][%s] %s" % (now2(), os.uname()[1], message))
     if newline:
         sys.stdout.write("\n")
     if flush:
         sys.stdout.flush()
 
 
-def now():
-    return datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-
-
 def snapshot_create(zt, devname, label):
     try:
         zt.target_snapshot_create(devname, label)
     except RuntimeError, e:
-        merr("error: %s", e)
+        merr(e)
         return False
 
     return True
@@ -108,13 +113,13 @@ def execute(options):
     zt = ZfsTools()
 
     if options.devname not in zt.devnames_zfs():
-        merr("error: device name not found")
+        merr("device name not found")
         return 1
 
     prefix = generate_prefix(options.label)
     label = "%s_%s" % (prefix, now())
     if not snapshot_create(zt, options.devname, label):
-        merr("error: create snapshot failed")
+        merr("create snapshot failed")
         return 2
 
     if options.lifetime:

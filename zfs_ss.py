@@ -78,6 +78,7 @@ def snapshot_manage_lifetime(zt, devname, border, prefix):
         mout("complete.")
         return 0
     else:
+        mout("not found.")
         return 4
 
 
@@ -96,6 +97,7 @@ def snapshot_manage_generation(zt, devname, generation, feature):
         mout("complete.")
         return 0
     else:
+        mout("not found.")
         return 3
 
 

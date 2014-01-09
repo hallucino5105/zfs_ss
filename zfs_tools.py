@@ -44,12 +44,10 @@ def authority_check(f):
 def zfs_command_exist_check(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        data = subcommand("which zpool").print1()
-        if not os.path.exists(data[0]):
-            raise RuntimeError("zpool command not found")
-
-        data = subcommand("which zfs").print1()
-        if not os.path.exists(data[0]):
+        try:
+            subcommand("which zpool").print1()
+            subcommand("which zfs").print1()
+        except RuntimeError:
             raise RuntimeError("zfs command not found")
 
         result = f(*args, **kwargs)
@@ -58,12 +56,13 @@ def zfs_command_exist_check(f):
     return wrapper
 
 
-@authority_check
-@zfs_command_exist_check
 def prior_check(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
-        result = f(*args, **kwargs)
+        f1 = authority_check(f)
+        f2 = zfs_command_exist_check(f1)
+
+        result = f2(*args, **kwargs)
         return result
 
     return wrapper

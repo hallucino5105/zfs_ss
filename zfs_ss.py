@@ -59,7 +59,8 @@ def snapshot_feature_list(zt, devname, feature):
 
 
 def snapshot_manage_lifetime(zt, devname, border, prefix):
-    mout("snapshot management by lifetime")
+    mout("zfs snapshot management by lifetime.")
+    mout("searching...")
 
     sslist = snapshot_feature_list(zt, devname, prefix)
 
@@ -71,27 +72,28 @@ def snapshot_manage_lifetime(zt, devname, border, prefix):
 
     if len(del_sslist) > 0:
         for ds in del_sslist:
-            mout("snapshot garbage collect")
-            mout("  target: name='%s' date='%s'" % (ds["name"], ds["date"]))
-
+            mout("snapshot garbage collection. target: name='%s' date='%s'" % (ds["name"], ds["date"]))
             zt.target_snapshot_destroy(ds["name"])
+
+        mout("complete.")
         return 0
     else:
         return 4
 
 
 def snapshot_manage_generation(zt, devname, generation, feature):
-    mout("snapshot management by generation")
+    mout("zfs snapshot management by generation.")
+    mout("searching...")
 
     sslist = snapshot_feature_list(zt, devname, feature)
 
     if len(sslist) > generation:
         del_sslist = sslist[generation:]
         for ds in del_sslist:
-            mout("snapshot garbage collect")
-            mout("  target: name='%s' date='%s'" % (ds["name"], ds["date"]))
-
+            mout("snapshot garbage collection. target: name='%s' date='%s'" % (ds["name"], ds["date"]))
             zt.target_snapshot_destroy(ds["name"])
+
+        mout("complete.")
         return 0
     else:
         return 3

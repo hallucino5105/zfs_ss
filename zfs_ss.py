@@ -113,7 +113,7 @@ def execute(options):
     zt = ZfsTools()
 
     if options.devname not in zt.devnames_zfs():
-        merr("device name not found")
+        merr("device not found")
         return 1
 
     prefix = generate_prefix(options.label)

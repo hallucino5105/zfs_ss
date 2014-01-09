@@ -45,8 +45,8 @@ def zfs_command_exist_check(f):
     @wraps(f)
     def wrapper(*args, **kwargs):
         try:
-            subcommand("which zpool").print1()
-            subcommand("which zfs").print1()
+            subcommand("which /sbin/zpool").print1()
+            subcommand("which /sbin/zfs").print1()
         except RuntimeError:
             raise RuntimeError("zfs command not found")
 
@@ -101,7 +101,7 @@ class ZfsTools:
 
             return e
 
-        return self.__list_command_proc("zpool list %s" % target, modifier)
+        return self.__list_command_proc("/sbin/zpool list %s" % target, modifier)
 
 
     @prior_check
@@ -117,7 +117,7 @@ class ZfsTools:
 
             return e
 
-        return self.__list_command_proc("zfs list -t filesystem,volume %s" % target, modifier)
+        return self.__list_command_proc("/sbin/zfs list -t filesystem,volume %s" % target, modifier)
 
 
     @prior_check
@@ -133,7 +133,7 @@ class ZfsTools:
 
             return e
 
-        return self.__list_command_proc("zfs list -t snapshot %s" % target, modifier)
+        return self.__list_command_proc("/sbin/zfs list -t snapshot %s" % target, modifier)
 
 
     @prior_check
@@ -154,7 +154,7 @@ class ZfsTools:
         else:
             prop_cmd = ",".join(prop)
 
-        return self.__list_command_proc("zpool get %s %s" % (prop_cmd, target), modifier)
+        return self.__list_command_proc("/sbin/zpool get %s %s" % (prop_cmd, target), modifier)
 
 
     @prior_check
@@ -189,7 +189,7 @@ class ZfsTools:
         else:
             prop_cmd = ",".join(prop)
 
-        return self.__list_command_proc("zfs get %s %s" % (prop_cmd, target), modifier)
+        return self.__list_command_proc("/sbin/zfs get %s %s" % (prop_cmd, target), modifier)
 
 
     @prior_check
@@ -243,7 +243,7 @@ class ZfsTools:
             label = "%s_%s" % (datetime.datetime.now().strftime("%Y%m%d%H%M%S"), self.__random_string(5))
         snapshot_name = "%s@%s" % (dev_target, label)
 
-        ret, _, errmsg = subcommand("zfs snapshot %s" % snapshot_name).print0()
+        ret, _, errmsg = subcommand("/sbin/zfs snapshot %s" % snapshot_name).print0()
         if ret != 0:
             raise RuntimeError("snapshot creation failed: %d\n  reason = \"%s\"" % (ret, errmsg))
 
@@ -254,7 +254,7 @@ class ZfsTools:
     def target_snapshot_destroy(self, ss_target):
         self.__snapshot_name_format_check(ss_target)
 
-        ret, _, errmsg = subcommand("zfs destroy %s" % ss_target).print0()
+        ret, _, errmsg = subcommand("/sbin/zfs destroy %s" % ss_target).print0()
         if ret != 0:
             raise RuntimeError("snapshot destroy failed: %d\n  reason = \"%s\"" % (ret, errmsg))
 

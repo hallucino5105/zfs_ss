@@ -182,25 +182,26 @@ def parse_options():
         parser.print_help()
         return None
 
-    lifetime_postfix = options.lifetime[-1]
+    if options.lifetime:
+        lifetime_postfix = options.lifetime[-1]
 
-    # s,m,h,dがついてる場合 ついてなければそのまま
-    if not lifetime_postfix.isdigit():
-        lifetime = int(options.lifetime[0:-1])
+        # s,m,h,dがついてる場合 ついてなければそのまま
+        if not lifetime_postfix.isdigit():
+            lifetime = int(options.lifetime[0:-1])
 
-        if lifetime_postfix == "s":
-            options.lifetime = lifetime
-        elif lifetime_postfix == "m":
-            options.lifetime = lifetime * 60
-        elif lifetime_postfix == "h":
-            options.lifetime = lifetime * 60 * 60
-        elif lifetime_postfix == "d":
-            options.lifetime = lifetime * 24 * 60 * 60
+            if lifetime_postfix == "s":
+                options.lifetime = lifetime
+            elif lifetime_postfix == "m":
+                options.lifetime = lifetime * 60
+            elif lifetime_postfix == "h":
+                options.lifetime = lifetime * 60 * 60
+            elif lifetime_postfix == "d":
+                options.lifetime = lifetime * 24 * 60 * 60
+            else:
+                raise RuntimeError("lifetime postfix unknown format")
+
         else:
-            raise RuntimeError("lifetime postfix unknown format")
-
-    else:
-        options.lifetime = int(options.lifetime)
+            options.lifetime = int(options.lifetime)
 
     if options.lifetime and not options.lifetime > 0:
         mout("error: options 'lifetime' greater than 0")

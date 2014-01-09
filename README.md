@@ -1,4 +1,4 @@
-zfs_ss
+ZfsSS
 ======
 
 zfs snapshot manager

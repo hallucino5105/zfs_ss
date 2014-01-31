@@ -12,7 +12,7 @@ import random
 from functools import wraps
 
 sys.path.append(os.path.expanduser("~/my_lib/subcommand"))
-from subcommand import subcommand
+from mysubcommand import mysubcommand as subcommand
 
 
 def set_locale_c(f):

@@ -12,7 +12,7 @@ import random
 from functools import wraps
 
 #sys.path.append(os.path.expanduser("~/my_lib/subcommand"))
-sys.path.append("/home/hoshino/my_lib/subcommand")
+sys.path.append("/home/hoshino/my_lib/mysubcommand")
 from mysubcommand import mysubcommand as subcommand
 
 
